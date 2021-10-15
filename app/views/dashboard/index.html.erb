@@ -25,7 +25,16 @@
   <% end %>
   </tbody>
 </table>
-
-<br>
-
 <%= link_to 'New Article', new_article_path %>
+<br>
+<h1>Comments</h1>
+
+<% if @comments.any? %>
+  <% @comments.each do |comment| %>
+    <%= comment.user.username %>  wrote a comment to your <%= link_to comment.article.title, article_comment_path(comment.article, comment.id) %>
+    <br>
+  <% end %>
+<% else %>
+  No Accepted Comment
+
+<% end %>
