@@ -8,7 +8,7 @@ class DashboardController < ApplicationController
 
     @articles.each { |article|
       article.comments.each { |comment|
-        if comment.user_id != current_user.__id__ && !comment.accepted
+        if comment.user_id != current_user.__id__
           @comments << comment
         end
       }

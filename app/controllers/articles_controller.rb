@@ -1,5 +1,5 @@
 class ArticlesController < ApplicationController
-  before_action :set_article, only: %i[ show edit update destroy]
+  before_action :set_article, only: %i[ show edit update destroy vote_plus vote_minus]
   before_action :authenticate_user!
 
   def index
@@ -7,7 +7,7 @@ class ArticlesController < ApplicationController
   end
 
   def show
-    @comments = @article.comments.accepteds
+    @comments = @article.comments.accepteds_and_user_created(current_user.id)
   end
 
   def new
@@ -51,12 +51,27 @@ class ArticlesController < ApplicationController
     end
   end
 
-  private
-    def set_article
-      @article = Article.find(params[:id])
+  def vote_plus
+    @article.update(vote: @article.vote + 1)
+    respond_to do |format|
+      format.js
     end
+  end
 
-    def article_params
-      params.require(:article).permit(:title,:content, :visible)
+  def vote_minus
+    @article.update(vote: @article.vote - 1)
+    respond_to do |format|
+      format.js
     end
+  end
+
+  private
+
+  def set_article
+    @article = Article.find(params[:id])
+  end
+
+  def article_params
+    params.require(:article).permit(:title, :content, :visible)
+  end
 end
